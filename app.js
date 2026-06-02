@@ -1,5 +1,6 @@
 const express = require('express');
-const supabaseClient = require('@supabase/supabase-js');
+// CORREÇÃO 1: Importação correta do createClient do Supabase
+const { createClient } = require('@supabase/supabase-js'); 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -10,7 +11,7 @@ const app = express();
 app.use(cors({
    origin: '*', 
    credentials: true,
-   optionSuccessStatus: 200,
+   optionsSuccessStatus: 200, // CORREÇÃO 2: Adicionado o 's' em optionsSuccessStatus
 }));
 
 app.use(morgan('combined'));
@@ -20,22 +21,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 
-// Conexão com o Supabase
-const supabase = supabaseClient.createClient(
+// Conexão com o Supabase usando a função correta
+const supabase = createClient(
     'https://buiyeqsyxalrhchylheo.supabase.co', 
     'sb_publishable_SCHgxXSZBqajmLYtM_zC8w_f4S3vNfc'
 );
 
 // 1. LISTAR TODOS (GET)
 app.get('/products', async (req, res) => {
-    // Alinhado com a tabela 'Backend' do seu banco
     const { data, error } = await supabase.from('Backend').select();
     if (error) return res.status(400).json(error);
     
-    // Mapeia a coluna 'Product' do banco de volta para 'name' para o Front-End entender
     const mappedData = data.map(item => ({
         id: item.id,
-        name: item.Product, // Converte 'Product' para 'name'
+        name: item.Product, 
         price: item.price,
         description: item.description
     }));
@@ -68,7 +67,7 @@ app.post('/products', async (req, res) => {
     const { data, error } = await supabase
         .from('Backend')
         .insert([{
-            Product: req.body.name, // Envia 'name' do front para a coluna 'Product'
+            Product: req.body.name, 
             description: req.body.description,
             price: req.body.price ? parseFloat(req.body.price) : 0,
         }])
@@ -102,6 +101,21 @@ app.delete('/products/:id', async (req, res) => {
 
     if (error) return res.status(400).json(error);
     res.send("deleted!!");
+});
+
+// ATENÇÃO
+// 1. Deixe a rota raiz AQUI (Antes do erro 404)
+app.get('/', (req, res) => {
+    res.send("Back-End rodando integrado à tabela Backend do Supabase! 🚀");
+});
+
+// 2. O Erro 404 deve ser SEMPRE a ÚLTIMA coisa do código antes do app.listen
+app.use((req, res) => {
+    res.status(404).json({ error: "Rota não encontrada no servidor." });
+});
+
+app.listen(3000, () => {
+    console.log(`> Servidor ativo em http://localhost:3000`);
 });
 
 // Tratamento de rotas inexistentes
