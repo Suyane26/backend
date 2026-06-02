@@ -116,12 +116,3 @@ app.use((req, res) => {
 app.listen(3000, () => {
     console.log(`> Servidor ativo em http://localhost:3000`);
 });
-
-// Tratamento de rotas inexistentes
-app.use((req, res) => {
-    res.status(404).json({ error: "Rota não encontrada no servidor." });
-});
-
-app.listen(3000, () => {
-    console.log(`> Servidor ativo em http://localhost:3000`);
-});
