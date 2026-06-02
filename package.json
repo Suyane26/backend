@@ -12,8 +12,17 @@
   "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.107.0",
+    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "morgan": "^1.10.1"
-  }
+    "morgan": "^1.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Suyane26/backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Suyane26/backend/issues"
+  },
+  "homepage": "https://github.com/Suyane26/backend#readme"
 }
