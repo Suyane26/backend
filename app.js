@@ -1,6 +1,5 @@
 const express = require('express');
-// CORREÇÃO 1: Importação correta do createClient do Supabase
-const { createClient } = require('@supabase/supabase-js'); 
+const { createClient } = require('@supabase/supabase-js');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
